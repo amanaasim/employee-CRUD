@@ -129,6 +129,11 @@
 
         function addEmployee()
         {
+            document.getElementById("user_name").value = "";
+            document.getElementById("user_email").value = "";
+            document.getElementById("user_phone").value = "";
+            document.getElementById("user_gender").value = "";
+
             $(".add_emp_btn").hide();
             $(".view_emp_btn").show();
 
@@ -269,7 +274,6 @@
                 success: function (res) 
                 {
                     if (res.status === true) {
-
                         viewEmployee();
 
                         iziToast.success({

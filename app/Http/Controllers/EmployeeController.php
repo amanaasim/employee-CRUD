@@ -14,7 +14,7 @@ class EmployeeController extends Controller
         $name   = $request->name    ?? "";
         $email  = $request->email   ?? "";
         $phone  = $request->phone   ?? "";
-        $gender = $request->name    ?? "";
+        $gender = $request->gender  ?? "";
 
         if($name == "")
         {
