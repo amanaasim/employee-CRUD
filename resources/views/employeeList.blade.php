@@ -43,6 +43,12 @@
             .cursor-pointer{
                 cursor: pointer;
             }
+            .sortinh_icons i
+            {
+                line-height: 0.3;
+                cursor: pointer;
+                display: block;
+            }
         </style>
     </head>
     <body class="antialiased">
@@ -52,12 +58,24 @@
                     <button class="view_emp_btn px-4 py-2 bg-grey border" style="display:none" onclick="viewEmployee()">View Emplyees</button>
             </div>
             <div class="">
-                <table  class="table table-striped table-hover">
-                    <thead>
+                <table  class="table table-striped table-hover border">
+                    <thead class="table table-secondary">
                       <tr>
                         <th scope="col">#</th>
-                        <th scope="col">User Name</th>
-                        <th scope="col">Email</th>
+                        <th scope="col">
+                                User Name 
+                                <span class="ms-1 sortinh_icons ">
+                                    <i onclick="sortEmployee('name_asc')" class="name_asc fas fa-sort-up cursor-pointer" style="display: none;"></i>
+                                    <i onclick="sortEmployee('name_desc')" class="name_desc fas fa-sort-down cursor-pointer"></i>
+                                </span>
+                        </th>
+                        <th scope="col">
+                            Email
+                            <span class="ms-1 sortinh_icons ">
+                                <i onclick="sortEmployee('email_asc')" class="email_asc fas fa-sort-up cursor-pointer" style="display: none;"></i>
+                                <i onclick="sortEmployee('email_desc')" class="email_desc fas fa-sort-down cursor-pointer"></i>
+                            </span>
+                        </th>
                         <th scope="col">Phone</th>
                         <th scope="col">Gender</th>
                         <th scope="col">Actions</th>
@@ -100,6 +118,7 @@
     </body>
 
     <script>
+        var employees_list_array = [];
         $(document).ready(function(){
             $(function () {
                 $('[data-toggle="tooltip"]').tooltip()
@@ -129,6 +148,8 @@
                 success: function (res) 
                 {
                     if (res.status === true) {
+
+                        employees_list_array = res.data;
 
                         var emp_list = "";
 
@@ -325,6 +346,7 @@
                 {
                     if (res.status === true) {
 
+                        employees_list_array = res.data;
                         var emp_list = "";
 
                         $.each(res.data, function(key, value){
@@ -544,6 +566,71 @@
                 }
             });
 
+        }
+
+        function sortEmployee(sortKey)
+        {
+
+            employees_list_array.sort(function (a, b) {
+
+                if (sortKey == "name_asc") {
+
+                    $(".name_asc").hide();
+                    $(".name_desc").show();
+
+                    if (a.name > b.name) return -1;
+                    else if (a.name < b.name) return 1;
+                    return 0;
+                }
+                else if (sortKey == "name_desc") {
+
+                    $(".name_asc").show();
+                    $(".name_desc").hide();
+
+                    if (a.name < b.name) return -1;
+                    else if (a.name > b.name) return 1;
+                    return 0;
+                }
+                else if (sortKey == "email_asc") {
+
+                    $(".email_asc").hide();
+                    $(".email_desc").show();
+
+                    if (a.email > b.email) return -1;
+                    else if (a.email < b.email) return 1;
+                    return 0;
+                }
+                else if (sortKey == "email_desc") {
+
+                    $(".email_asc").show();
+                    $(".email_desc").hide();
+
+                    if (a.email < b.email) return -1;
+                    else if (a.email > b.email) return 1;
+                    return 0;
+                }
+            });
+
+            var emp_list = "";
+            $.each(employees_list_array, function(key, value){
+                emp_list += `
+                                <tr>
+                                    <th scope="row">${key + 1}</th>
+                                    <td>${value.name}</td>
+                                    <td>${value.email}</td>
+                                    <td>${value.phone}</td>
+                                    <td class="text-capitalize">${value.gender}</td>
+                                    <td>
+                                        <i title="Update" onclick="updateEmployee(${value.id})" class="px-3 fa-solid fa-pen-to-square text-success cursor-pointer"></i>
+                                        <i title="Delete" onclick="confirmEmployeeDelete(${value.id})" class="fa-solid fa-trash text-danger cursor-pointer"></i>
+                                    </td>
+                                </tr>
+                            `
+            });
+
+            $(".emp_list").html(emp_list)
+
+            
         }
 
 
